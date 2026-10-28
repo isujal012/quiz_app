@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Pro | Modern Interactive Trivia & Knowledge Arena</title>
+    <meta name="description" content="Experience a next-generation quiz app featuring Python programming, web tech, science, and general trivia with custom quiz creation, live timer, lifelines, and sound effects.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="cream">
+    <!-- Ambient Warm Paper Lighting -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="brand-logo" id="brand-logo">
+                <div class="portfolio-avatar">
+                    <svg viewBox="0 0 40 40" width="38" height="38" class="avatar-svg">
+                        <circle cx="20" cy="20" r="18" fill="#ebe4f7" stroke="#ded5ee" stroke-width="1.5" />
+                        <rect x="11" y="14" width="18" height="4.5" rx="1.5" fill="#7c5cbf" />
+                        <rect x="11" y="21.5" width="18" height="4.5" rx="1.5" fill="#7c5cbf" />
+                        <rect x="17.5" y="14" width="5" height="12" fill="#7c5cbf" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">QuizMaster</span>
+                    <span class="logo-tag">PRO</span>
+                </div>
+            </div>
+
+            <div class="header-stats-quick">
+                <div class="stat-pill" title="All-time high score">
+                    <span class="stat-icon">🏆</span>
+                    <span class="stat-label">Best:</span>
+                    <span class="stat-value" id="stat-best-score">0</span>
+                </div>
+                <div class="stat-pill" title="Total games played">
+                    <span class="stat-icon">🎮</span>
+                    <span class="stat-label">Games:</span>
+                    <span class="stat-value" id="stat-total-games">0</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button type="button" class="btn-sound" id="btn-sound-toggle" aria-label="Toggle Sound Effects">
+                    <span class="icon">🔊</span>
+                    <span>Sound On</span>
+                </button>
+                <button type="button" class="btn-secondary" id="btn-open-custom">
+                    <span class="icon">✏️</span>
+                    <span>Custom Quiz</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN SCREENS CONTAINER -->
+        <main class="main-content">
+
+            <!-- 1. START SCREEN -->
+            <section class="screen start-screen active" id="start-screen">
+                <div class="hero-banner">
+                    <div class="hero-badge">B.TECH · ARTIFICIAL INTELLIGENCE & MACHINE LEARNING</div>
+                    <h1 class="hero-title">Step Into The <span class="serif-highlight">Knowledge Arena.</span></h1>
+                    <p class="hero-subtitle">Engage with dynamic interactive questions across Python, web technologies, and science. Compete against the clock, earn streak multipliers, and design your own quizzes.</p>
+                </div>
+
+                <!-- Game Configuration Grid -->
+                <div class="setup-grid">
+                    <!-- Left: Category Selection -->
+                    <div class="setup-section categories-section">
+                        <div class="section-header">
+                            <span class="step-num">1</span>
+                            <h2>Choose Your Category</h2>
+                        </div>
+                        <div class="category-grid" id="category-grid">
+                            <!-- Populated dynamically by app.js -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Mode & Difficulty Settings -->
+                    <div class="setup-section config-section">
+                        <div class="config-block">
+                            <div class="section-header">
+                                <span class="step-num">2</span>
+                                <h2>Select Game Mode</h2>
+                            </div>
+                            <div class="mode-selector-grid">
+                                <div class="mode-card active" data-mode="classic">
+                                    <div class="mode-icon">⏱️</div>
+                                    <div class="mode-details">
+                                        <h4>Classic Timed</h4>
+                                        <p>15s per question + speed bonus</p>
+                                    </div>
+                                </div>
+                                <div class="mode-card" data-mode="blitz">
+                                    <div class="mode-icon">⚡</div>
+                                    <div class="mode-details">
+                                        <h4>Blitz Rush</h4>
+                                        <p>8s intense countdown + 1.5x score</p>
+                                    </div>
+                                </div>
+                                <div class="mode-card" data-mode="survival">
+                                    <div class="mode-icon">💖</div>
+                                    <div class="mode-details">
+                                        <h4>Survival (3 Lives)</h4>
+                                        <p>Sudden death on 3 wrong answers</p>
+                                    </div>
+                                </div>
+                                <div class="mode-card" data-mode="zen">
+                                    <div class="mode-icon">🧘</div>
+                                    <div class="mode-details">
+                                        <h4>Zen Practice</h4>
+                                        <p>No timer, relaxed study pace</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-block">
+                            <div class="section-header">
+                                <span class="step-num">3</span>
+                                <h2>Difficulty & Length</h2>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Difficulty Level:</label>
+                                <div class="button-toggle-group">
+                                    <button type="button" class="diff-btn active" data-diff="all">All Levels</button>
+                                    <button type="button" class="diff-btn" data-diff="easy">Easy</button>
+                                    <button type="button" class="diff-btn" data-diff="medium">Medium</button>
+                                    <button type="button" class="diff-btn" data-diff="hard">Hard</button>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="filter-label">Question Count:</label>
+                                <div class="button-toggle-group">
+                                    <button type="button" class="count-btn" data-count="5">5 Questions</button>
+                                    <button type="button" class="count-btn active" data-count="10">10 Questions</button>
+                                    <button type="button" class="count-btn" data-count="15">15 Questions</button>
+                                    <button type="button" class="count-btn" data-count="999">Max Pool</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary btn-large btn-glow" id="btn-start-game">
+                            <span>Launch Quiz Game</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. QUIZ ACTIVE SCREEN -->
+            <section class="screen quiz-screen" id="quiz-screen">
+                <!-- Top HUD Bar -->
+                <div class="quiz-hud">
+                    <div class="hud-left">
+                        <span class="hud-tag hud-category" id="hud-category">Python & Coding</span>
+                        <span class="hud-tag hud-mode" id="hud-mode">⏱️ Classic</span>
+                    </div>
+
+                    <div class="hud-center">
+                        <div class="progress-status-container">
+                            <div class="progress-labels">
+                                <span id="hud-progress">Question 1 of 10</span>
+                                <span id="hud-streak-badge" class="streak-badge" style="display: none;">3x Streak 🔥</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="hud-progress-fill" style="width: 10%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hud-right">
+                        <div class="hud-lives" id="hud-lives" style="display: none;">
+                            <!-- Lives populated dynamically -->
+                        </div>
+                        <div class="score-display">
+                            <span class="score-label">Score</span>
+                            <span class="score-digits" id="hud-score">0</span>
+                        </div>
+                        <div class="streak-counter" id="hud-streak">Streak: 0</div>
+                    </div>
+                </div>
+
+                <!-- Timer Circular Display -->
+                <div class="timer-wrapper" id="timer-container">
+                    <svg class="timer-svg" width="60" height="60" viewBox="0 0 52 52">
+                        <circle class="timer-circle-bg" cx="26" cy="26" r="22" />
+                        <circle class="timer-circle-progress" id="timer-circle-progress" cx="26" cy="26" r="22" />
+                    </svg>
+                    <span class="timer-text" id="timer-text">15s</span>
+                </div>
+
+                <!-- Question Card -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="diff-badge badge-medium" id="question-diff-badge">MEDIUM</span>
+                        <div class="lifelines-bar">
+                            <span class="lifelines-title">Lifelines:</span>
+                            <button type="button" class="lifeline-btn" id="lifeline-5050" title="Eliminate two incorrect answers">
+                                <span class="lifeline-icon">½</span>
+                                <span class="lifeline-label">50:50</span>
+                            </button>
+                            <button type="button" class="lifeline-btn" id="lifeline-time" title="Add +15 seconds to the clock">
+                                <span class="lifeline-icon">+15s</span>
+                                <span class="lifeline-label">Freeze</span>
+                            </button>
+                            <button type="button" class="lifeline-btn" id="lifeline-skip" title="Skip question without penalty">
+                                <span class="lifeline-icon">⏭️</span>
+                                <span class="lifeline-label">Skip</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <h2 class="question-title" id="question-text">Loading question text...</h2>
+
+                    <!-- Code Snippet Box (for programming questions) -->
+                    <div class="code-container" id="code-snippet-container" style="display: none;">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre class="code-content"><code id="code-snippet"></code></pre>
+                    </div>
+
+                    <!-- Multiple Choice Options -->
+                    <div class="options-grid" id="options-grid">
+                        <!-- Populated dynamically with 4 option cards -->
+                    </div>
+
+                    <!-- Feedback & Explanation Box -->
+                    <div class="explanation-box" id="explanation-box">
+                        <div class="explanation-header">
+                            <span class="exp-icon">💡</span>
+                            <strong>Knowledge Nugget & Explanation</strong>
+                        </div>
+                        <p class="explanation-text" id="explanation-text"></p>
+                    </div>
+
+                    <!-- Next Question Action Footer -->
+                    <div class="question-footer">
+                        <div class="keyboard-hint">
+                            <span>Keyboard Shortcuts: Press <strong>1-4</strong> or <strong>A-D</strong> to choose, <strong>Enter/Space</strong> for next.</span>
+                        </div>
+                        <button type="button" class="btn-primary btn-next" id="btn-next-question" style="display: none;">
+                            <span>Next Question</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. RESULTS & SUMMARY SCREEN -->
+            <section class="screen result-screen" id="result-screen">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title-badge" id="result-title-badge">Grandmaster Genius 👑</div>
+                        <h2>Quiz Run Complete!</h2>
+                        <p class="result-category" id="result-category-name">Python & Coding</p>
+                    </div>
+
+                    <!-- Circular Progress Gauge -->
+                    <div class="score-gauge-container">
+                        <div class="gauge-wrapper">
+                            <svg class="gauge-svg" width="160" height="160" viewBox="0 0 160 160">
+                                <circle class="gauge-bg" cx="80" cy="80" r="68" />
+                                <circle class="gauge-progress" id="result-circle-fill" cx="80" cy="80" r="68" />
+                            </svg>
+                            <div class="gauge-content">
+                                <span class="gauge-percent" id="result-percent-text">0%</span>
+                                <span class="gauge-label">ACCURACY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Metrics Grid -->
+                    <div class="result-metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-icon">⭐</span>
+                            <span class="metric-label">Total Score</span>
+                            <span class="metric-value" id="result-score">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">🎯</span>
+                            <span class="metric-label">Accuracy & Correct</span>
+                            <span class="metric-value" id="result-accuracy">0% (0/0)</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">🔥</span>
+                            <span class="metric-label">Best Streak</span>
+                            <span class="metric-value" id="result-streak">0x</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">⏱️</span>
+                            <span class="metric-label">Total Time</span>
+                            <span class="metric-value" id="result-time">0m 0s</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="result-actions">
+                        <button type="button" class="btn-primary btn-large" id="btn-play-again">
+                            <span class="icon">🔄</span>
+                            <span>Play Again</span>
+                        </button>
+                        <button type="button" class="btn-secondary" id="btn-review-answers">
+                            <span class="icon">📝</span>
+                            <span>Review Answers</span>
+                        </button>
+                        <button type="button" class="btn-secondary" id="btn-share-score">
+                            <span class="icon">📋</span>
+                            <span>Copy Score Card</span>
+                        </button>
+                        <button type="button" class="btn-tertiary" id="btn-change-category">
+                            <span>Main Menu</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <p>QuizMaster Pro • Crafted with Vanilla Web Technologies • Fully Offline Ready</p>
+        </footer>
+    </div>
+
+    <!-- MODAL: REVIEW ANSWERS -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal-container review-modal-container">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">📝</span>
+                    <h3>Comprehensive Run Review</h3>
+                </div>
+                <button type="button" class="modal-close" id="btn-close-review" aria-label="Close Review">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="review-list" id="review-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CUSTOM QUIZ BUILDER & JSON IMPORT/EXPORT -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-container custom-modal-container">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">✏️</span>
+                    <h3>Custom Quiz Builder & Importer</h3>
+                </div>
+                <button type="button" class="modal-close" id="btn-close-custom" aria-label="Close Builder">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Quiz Meta Info -->
+                <form id="custom-quiz-form" class="custom-form">
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="custom-quiz-name">Quiz Title *</label>
+                            <input type="text" id="custom-quiz-name" placeholder="e.g. Advanced Python Generators" required>
+                        </div>
+                        <div class="form-group icon-input">
+                            <label for="custom-quiz-icon">Emoji Icon</label>
+                            <input type="text" id="custom-quiz-icon" placeholder="e.g. 🐍, 🚀, 🤖" value="✨" maxlength="2">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custom-quiz-desc">Description</label>
+                        <input type="text" id="custom-quiz-desc" placeholder="Brief summary of what this quiz covers">
+                    </div>
+
+                    <div class="divider">
+                        <span>Add Question To This Quiz</span>
+                    </div>
+
+                    <!-- Question Draft Subform -->
+                    <div class="draft-question-subform">
+                        <div class="form-group">
+                            <label for="draft-question-title">Question Prompt *</label>
+                            <textarea id="draft-question-title" rows="2" placeholder="What is the question?"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="draft-question-code">Code Snippet (Optional)</label>
+                            <textarea id="draft-question-code" rows="3" placeholder="def my_func(): ..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Multiple Choice Options & Mark Correct (Select Radio) *</label>
+                            <div class="draft-options-list">
+                                <div class="draft-opt-row">
+                                    <input type="radio" name="draft-correct" value="0" checked id="radio-opt-0">
+                                    <label for="radio-opt-0" class="radio-tag">A</label>
+                                    <input type="text" id="draft-opt-0" placeholder="Option A text">
+                                </div>
+                                <div class="draft-opt-row">
+                                    <input type="radio" name="draft-correct" value="1" id="radio-opt-1">
+                                    <label for="radio-opt-1" class="radio-tag">B</label>
+                                    <input type="text" id="draft-opt-1" placeholder="Option B text">
+                                </div>
+                                <div class="draft-opt-row">
+                                    <input type="radio" name="draft-correct" value="2" id="radio-opt-2">
+                                    <label for="radio-opt-2" class="radio-tag">C</label>
+                                    <input type="text" id="draft-opt-2" placeholder="Option C text">
+                                </div>
+                                <div class="draft-opt-row">
+                                    <input type="radio" name="draft-correct" value="3" id="radio-opt-3">
+                                    <label for="radio-opt-3" class="radio-tag">D</label>
+                                    <input type="text" id="draft-opt-3" placeholder="Option D text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row two-col">
+                            <div class="form-group">
+                                <label for="draft-difficulty">Difficulty</label>
+                                <select id="draft-difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="draft-explanation">Explanation / Why</label>
+                                <input type="text" id="draft-explanation" placeholder="Shown after answer is revealed">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-secondary" id="btn-add-question-draft">
+                            <span>+ Add Question To Draft</span>
+                        </button>
+                    </div>
+
+                    <!-- Draft Questions Preview List -->
+                    <div class="draft-preview-section">
+                        <h4>Questions in this Quiz:</h4>
+                        <div class="custom-question-list" id="custom-question-list">
+                            <!-- Populated with draft questions -->
+                        </div>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer-actions">
+                        <div class="left-actions">
+                            <button type="button" class="btn-ghost" id="btn-export-json">
+                                <span>📥 Export Quizzes JSON</span>
+                            </button>
+                            <button type="button" class="btn-ghost" id="btn-import-json">
+                                <span>📤 Import JSON</span>
+                            </button>
+                            <input type="file" id="file-input-json" accept=".json" style="display: none;">
+                        </div>
+                        <button type="submit" class="btn-primary" id="btn-save-quiz">
+                            <span>💾 Save Custom Quiz</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Theme Switcher Button matching Sujal's portfolio -->
+    <button type="button" class="btn-theme-floating" id="btn-theme-toggle">
+        Switch to Dark Mode
+    </button>
+
+    <!-- Scripts -->
+    <script src="questions.js"></script>
+    <script src="audio.js"></script>
+    <script src="confetti.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
